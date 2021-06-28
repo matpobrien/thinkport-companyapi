@@ -13,9 +13,9 @@ namespace Companies.Functions
 {
     public static class AddCompany
     {
-        [FunctionName("AddCompany")]
+        [FunctionName(nameof(AddCompany))]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "Company")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "companies")] HttpRequest req,
             [CosmosDB(
                 "CompaniesDB",
                 "Companies",

@@ -1,5 +1,3 @@
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +11,26 @@ namespace Companies.Functions
     public class GetCompanyById
     {
         [FunctionName(nameof(GetCompanyById))]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Company/{partitionKey}/{id}")] HttpRequestMessage req,
+        public static IActionResult Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "companies/{id}")] HttpRequest req,
+            // could I have used a CosmosDBTrigger here with IReadOnlyList<Document> companyToFind as the return type?
             [CosmosDB(
                 databaseName: "CompaniesDB",
                 collectionName: "Companies",
                 ConnectionStringSetting = "CosmosDbConnectionString",
                 Id = "{id}",
                 PartitionKey = "{id}")] Company companyToFind, ILogger log)
+
+        /*
+        Query alternative:
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+        [CosmosDB(
+        databaseName: "CompaniesDB",
+        collectionName: "Companies",
+        ConnectionStringSetting = "CosmosDbConnectionString",
+        Id = "{Query.id}",
+        PartitionKey = "{Query.partitionKey}")] Company companyToFind,
+        */
         {
             if (companyToFind == null)
             {

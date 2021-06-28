@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +10,14 @@ namespace Companies.Functions
 {
     public class GetCompanies
     {
+        // making sure the function is serialized with a certain name
+        // attribute decorating the run function as the function that should be called by the azure function
         [FunctionName(nameof(GetCompanies))]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Companies")] HttpRequest req,
+        public static IActionResult Run(
+            // The square brackets in front of the arguments and in front of the function are attributes -> look up C# attributes, basically alow you to attach extra information to declarations
+            // I should probably look more into these triggers
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "companies")] HttpRequest req,
+            // Is this an output or input trigger?
             [CosmosDB("CompaniesDB", "Companies", ConnectionStringSetting = "CosmosDbConnectionString",
             SqlQuery = "SELECT * FROM c")] IEnumerable<Company> companies, ILogger log)
         {
